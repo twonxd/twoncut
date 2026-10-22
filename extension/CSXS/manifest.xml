@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ExtensionManifest Version="11.0" ExtensionBundleId="com.twonedit.twoncut" ExtensionBundleVersion="5.0.0" ExtensionBundleName="twoncut"
+<ExtensionManifest Version="11.0" ExtensionBundleId="com.twonedit.twoncut" ExtensionBundleVersion="5.0.1" ExtensionBundleName="twoncut"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ExtensionList>
-    <Extension Id="com.twonedit.twoncut.panel" Version="5.0.0" />
+    <Extension Id="com.twonedit.twoncut.panel" Version="5.0.1" />
   </ExtensionList>
   <ExecutionEnvironment>
     <HostList>

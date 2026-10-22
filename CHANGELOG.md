@@ -2,6 +2,12 @@
 
 All notable changes to twoncut are documented here. The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and versions follow [Semantic Versioning](https://semver.org/).
 
+## [5.0.1] - 2026-10-23
+
+### Added
+- The installer states what it changes on the system (user-profile install, Premiere's `PlayerDebugMode` setting) before installing.
+- Code signing policy, privacy policy and a description of system changes and uninstallation in the README.
+
 ## [5.0.0] - 2026-10-23
 
 First public release.
@@ -19,4 +25,5 @@ First public release.
 - Extension ID is now `com.twonedit.twoncut`. The installer removes the panel installed by earlier private builds (`com.sessizkes.panel`).
 - The WAV export preset is now taken from the user's Premiere Pro installation instead of being bundled.
 
+[5.0.1]: https://github.com/twonxd/twoncut/releases/tag/v5.0.1
 [5.0.0]: https://github.com/twonxd/twoncut/releases/tag/v5.0.0

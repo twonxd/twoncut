@@ -50,7 +50,15 @@
 Kurulum yönetici izni istemez. Güncellemek ya da kaldırmak için aynı dosyayı tekrar çalıştırman yeterli.
 
 > [!NOTE]
-> Kurulum programı henüz dijital olarak imzalı değil, bu yüzden Windows *"Windows bilgisayarınızı korudu"* uyarısı gösterebilir. **Ek bilgi › Yine de çalıştır**'a bas. İmzalama süreci devam ediyor.
+> Kurulum programı henüz dijital olarak imzalı değil, bu yüzden Windows *"Windows bilgisayarınızı korudu"* uyarısı gösterebilir. **Ek bilgi › Yine de çalıştır**'a bas. Bkz. [kod imzalama politikası](#kod-imzalama-politikası-code-signing-policy).
+
+**Kurulum sistemde neleri değiştirir**
+
+- Paneli `%APPDATA%\Adobe\CEP\extensions\com.twonedit.twoncut` klasörüne kopyalar.
+- Adobe'nin CEP `PlayerDebugMode` ayarını açar (`HKEY_CURRENT_USER\Software\Adobe\CSXS.9` – `CSXS.13`). Premiere'in Adobe tarafından imzalanmamış panelleri yükleyebilmesi için gereklidir.
+- Sadece **FFmpeg'i kur**'a basarsan: FFmpeg'i Windows Paket Yöneticisi ile kurar (`winget install Gyan.FFmpeg`).
+
+**Kaldırma:** `twoncut-setup.exe`'yi çalıştırıp **Kaldır**'a bas. Panel klasörü silinir. Başka paneller de kullanıyor olabileceği için `PlayerDebugMode` açık bırakılır; kapatmak için yukarıdaki anahtarlardaki `PlayerDebugMode` değerini silebilirsin.
 
 ## Kullanım
 
@@ -88,6 +96,22 @@ powershell -ExecutionPolicy Bypass -File scripts\dev-install.ps1
 ```
 
 Sürüm numarası `extension/CSXS/manifest.xml` dosyasından gelir. `v*` etiketi gönderildiğinde GitHub Actions kurulum programını derler ve bir sürüme ekler.
+
+## Kod imzalama politikası (Code signing policy)
+
+Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org) *(başvuru değerlendirmede; onaylanana kadar sürümler imzasızdır)*.
+
+- Kurulum programları bu repodaki etiketli commit'ten [GitHub Actions](.github/workflows/build.yml) ile derlenir; kişisel bir bilgisayarda derlenmez veya imzalanmaz.
+- Her imzalama isteği bir onaylayıcı tarafından elle onaylanır.
+
+**Ekip rolleri**
+
+- Commit atanlar ve inceleyenler: [@twonxd](https://github.com/twonxd)
+- Onaylayanlar: [@twonxd](https://github.com/twonxd)
+
+**Gizlilik politikası**
+
+Bu program, kullanıcı ya da onu kuran veya çalıştıran kişi özellikle istemedikçe başka ağ sistemlerine hiçbir bilgi göndermez. Tek ağ erişimi, kurulum programındaki isteğe bağlı **FFmpeg'i kur** butonudur; bu buton FFmpeg'i yayıncısından indirmek için Windows Paket Yöneticisi'ni (winget) çalıştırır ve bu indirme için winget'in [gizlilik bildirimi](https://github.com/microsoft/winget-cli/blob/master/PRIVACY.md) geçerlidir.
 
 ## Lisans
 

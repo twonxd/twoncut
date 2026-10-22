@@ -50,7 +50,15 @@
 The installer doesn't need administrator rights. Run it again later to update or uninstall.
 
 > [!NOTE]
-> The installer isn't code-signed yet, so Windows SmartScreen may show *"Windows protected your PC"*. Click **More info › Run anyway**. Signing is in progress.
+> The installer isn't code-signed yet, so Windows SmartScreen may show *"Windows protected your PC"*. Click **More info › Run anyway**. See the [code signing policy](#code-signing-policy).
+
+**What the installer changes on your system**
+
+- Copies the panel to `%APPDATA%\Adobe\CEP\extensions\com.twonedit.twoncut`.
+- Turns on Adobe's CEP `PlayerDebugMode` setting (`HKEY_CURRENT_USER\Software\Adobe\CSXS.9` to `CSXS.13`). Premiere needs it to load panels that aren't signed by Adobe.
+- Only if you click **Install FFmpeg**: installs FFmpeg with Windows Package Manager (`winget install Gyan.FFmpeg`).
+
+**Uninstall:** run `twoncut-setup.exe` and click **Uninstall**. It removes the panel folder. `PlayerDebugMode` is left on because other panels may depend on it; you can delete the `PlayerDebugMode` value under the keys above to turn it off.
 
 ## Usage
 
@@ -99,6 +107,22 @@ installer/   Windows installer (C# WinForms) and build script
 scripts/     Developer helpers
 docs/        Images used in this README
 ```
+
+## Code signing policy
+
+Free code signing provided by [SignPath.io](https://about.signpath.io), certificate by [SignPath Foundation](https://signpath.org) *(application in review; until it is approved, releases are unsigned)*.
+
+- Installers are built by [GitHub Actions](.github/workflows/build.yml) from the tagged commit in this repository; nothing is built or signed on a personal machine.
+- Every signing request is approved manually by an approver.
+
+**Team roles**
+
+- Committers and reviewers: [@twonxd](https://github.com/twonxd)
+- Approvers: [@twonxd](https://github.com/twonxd)
+
+**Privacy policy**
+
+This program will not transfer any information to other networked systems unless specifically requested by the user or the person installing or operating it. The only network access is the optional **Install FFmpeg** button in the installer, which runs Windows Package Manager (winget) to download FFmpeg from its publisher; winget's own [privacy statement](https://github.com/microsoft/winget-cli/blob/master/PRIVACY.md) applies to that download.
 
 ## Contributing
 

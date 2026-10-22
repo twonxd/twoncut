@@ -65,6 +65,8 @@ namespace Twoncut
         public static readonly string FfmpegMissing = T("required, not installed", "gerekli, kurulu değil");
         public static readonly string Installed = T("installed", "kurulu");
         public static readonly string NotInstalled = T("not installed", "kurulu değil");
+        public static readonly string SystemNote = T("Installs to your user profile and turns on Premiere's PlayerDebugMode setting, which unsigned panels need.",
+                                                     "Kullanıcı klasörüne kurar ve imzasız paneller için gereken Premiere PlayerDebugMode ayarını açar.");
         public static readonly string Installing = T("Installing…", "Kuruluyor…");
         public static readonly string InstallFailed = T("Install failed: ", "Kurulum başarısız: ");
         public static readonly string DoneRunning = T("Installed! Premiere Pro is open: restart it, then Window › Extensions › twoncut.",
@@ -523,11 +525,13 @@ namespace Twoncut
                     using (var b = new LinearGradientBrush(new RectangleF(x, track.Y, segW + 1, track.Height), Theme.Violet, Theme.Blue, 0f))
                         g.FillRectangle(b, seg);
             }
-            if (!string.IsNullOrEmpty(message))
+            // Before installing, say what will change on the system
+            bool note = string.IsNullOrEmpty(message) && !busy && !installedDone;
+            if (note || !string.IsNullOrEmpty(message))
             {
                 var r = new Rectangle(P(28), P(282), ClientSize.Width - P(56), P(30));
-                using (var f = new Font("Segoe UI", 8.75f))
-                    TextRenderer.DrawText(g, message, f, r, messageColor,
+                using (var f = new Font("Segoe UI", note ? 8f : 8.75f))
+                    TextRenderer.DrawText(g, note ? L.SystemNote : message, f, r, note ? Theme.Faint : messageColor,
                         TextFormatFlags.HorizontalCenter | TextFormatFlags.Top | TextFormatFlags.WordBreak | TextFormatFlags.NoPadding);
             }
         }
