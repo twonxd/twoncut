@@ -1,0 +1,73 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check tag matches manifest version
+        if: startsWith(github.ref, 'refs/tags/v')
+        shell: pwsh
+        run: |
+          $manifest = Get-Content extension/CSXS/manifest.xml -Raw
+          if ($manifest -notmatch 'ExtensionBundleVersion="([^"]+)"') { throw 'No version in manifest.xml' }
+          if ("v$($Matches[1])" -ne $env:GITHUB_REF_NAME) { throw "Tag $env:GITHUB_REF_NAME does not match manifest version $($Matches[1])" }
+
+      - name: Build installer
+        shell: powershell
+        run: powershell -NoProfile -ExecutionPolicy Bypass -File installer\build.ps1
+
+      - name: Smoke test silent install
+        shell: pwsh
+        run: |
+          $dest = Join-Path $env:RUNNER_TEMP 'twoncut-test'
+          $p = Start-Process dist\twoncut-setup.exe -ArgumentList '--install', '--dest', $dest -Wait -PassThru
+          if ($p.ExitCode -ne 0) { throw "Installer exited with $($p.ExitCode)" }
+          if (-not (Test-Path (Join-Path $dest 'CSXS\manifest.xml'))) { throw 'manifest.xml was not installed' }
+
+      - uses: actions/upload-artifact@v4
+        id: upload
+        with:
+          name: twoncut-setup
+          path: dist/twoncut-setup.exe
+          if-no-files-found: error
+
+      # Code signing (SignPath Foundation). Enable once the project is approved:
+      # add the SIGNPATH_API_TOKEN secret and fill in the organization / project / policy slugs.
+      # - uses: signpath/github-action-submit-signing-request@v1
+      #   with:
+      #     api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+      #     organization-id: '<organization id>'
+      #     project-slug: 'twoncut'
+      #     signing-policy-slug: 'release-signing'
+      #     github-artifact-id: ${{ steps.upload.outputs.artifact-id }}
+      #     wait-for-completion: true
+      #     output-artifact-directory: dist
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: twoncut-setup
+          path: dist
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: dist/twoncut-setup.exe
+          generate_release_notes: true

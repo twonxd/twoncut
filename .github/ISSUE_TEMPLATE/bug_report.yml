@@ -1,0 +1,39 @@
+name: Bug report
+description: Something doesn't work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you do, what did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: premiere
+    attributes:
+      label: Premiere Pro version
+      placeholder: e.g. 24.4.1
+    validations:
+      required: true
+  - type: input
+    id: twoncut
+    attributes:
+      label: twoncut version
+      placeholder: e.g. 5.0.0
+  - type: dropdown
+    id: selection
+    attributes:
+      label: What was selected?
+      multiple: true
+      options:
+        - Regular video/audio clips
+        - After Effects comp
+        - Nested sequence
+        - Clips on several tracks
+  - type: textarea
+    id: log
+    attributes:
+      label: Panel log
+      description: Gear icon › Log. Paste the lines around the error.
+      render: text
